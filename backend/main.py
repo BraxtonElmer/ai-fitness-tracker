@@ -121,7 +121,7 @@ async def analyze_food(file: UploadFile = File(...)):
         # Call Gemini
         try:
             response = client.models.generate_content(
-                model="gemini-flash-latest",
+                model="gemini-2.5-flash",
                 contents=[NUTRITION_PROMPT, image_part],
             )
         except Exception:

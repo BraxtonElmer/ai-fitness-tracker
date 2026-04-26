@@ -43,15 +43,35 @@ cp .env.example .env
 ```bash
 cd frontend
 flutter pub get
-# For physical device (replace IP with your machine's LAN IP):
-flutter run --dart-define=API_BASE_URL=http://192.168.29.2:8000
-# For emulator (uses 10.0.2.2 by default):
-flutter run
 ```
+
+**Standalone food scan (no laptop server)** — the app calls Gemini from the device. Pass your API key at build/run time:
+
+```bash
+flutter run --dart-define=GEMINI_API_KEY=your_key_here
+# Optional: different model (default in app is gemini-2.5-flash)
+flutter run --dart-define=GEMINI_API_KEY=your_key_here --dart-define=GEMINI_MODEL=gemini-2.5-flash-lite
+```
+
+**“Quota”, “ResourceExhausted”, or `limit: 0` in errors:** That usually means the project tied to your API key has **no free-tier quota** for that model (or **2.0 Flash** is not available for free anymore). The app now defaults to **`gemini-2.5-flash`**. In [Google Cloud Console](https://console.cloud.google.com) for the same project as your key: link a **billing account** (free usage can still be \$0; many accounts need billing linked for Generative Language API quotas to activate), and ensure the **Generative Language API** is enabled. If it still fails, try `GEMINI_MODEL=gemini-2.5-flash-lite` for a higher free-tier request cap. See [rate limits](https://ai.google.dev/gemini-api/docs/rate-limits).
+
+**With the FastAPI backend** (local development) — omit `GEMINI_API_KEY` and point the app at your machine:
+
+- **Android emulator** (default `API_BASE_URL` is `http://10.0.2.2:8000`):
+
+  ```bash
+  flutter run
+  ```
+
+- **Physical device** (use your computer’s LAN IP, same Wi‑Fi as the phone):
+
+  ```bash
+  flutter run --dart-define=API_BASE_URL=http://192.168.1.x:8000
+  ```
 
 ## Tech Stack
 
-- **Backend**: FastAPI, Google Gemini 2.0 Flash, Python
+- **Backend**: FastAPI, Google Gemini 2.5 Flash, Python
 - **Frontend**: Flutter, Dart
 - **APIs**: Google Gemini Vision, Android Health Connect
 - **Design**: Custom Clash Grotesk typography, minimal dark theme

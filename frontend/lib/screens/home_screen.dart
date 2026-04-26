@@ -9,6 +9,8 @@ import 'bmi_screen.dart';
 import 'food_scan_screen.dart';
 import 'food_search_screen.dart';
 import 'meal_log_editor_screen.dart';
+import 'progress_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -142,9 +144,40 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: AppSpacing.x4),
-                  Text(
-                    'Hello there',
-                    style: AppTextStyles.heading,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Hello there',
+                          style: AppTextStyles.heading,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder: (c, a, s) => const SettingsScreen(),
+                              transitionsBuilder: (c, a, s, child) =>
+                                  FadeTransition(
+                                opacity: a,
+                                child: child,
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          LucideIcons.settings,
+                          color: AppColors.mutedText,
+                          size: 22,
+                        ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(
+                          minWidth: 40,
+                          minHeight: 40,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.x4),
                   SizedBox(
@@ -273,6 +306,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: AppSpacing.x4),
                   if (!_loading) _buildGoalTrack(),
+                  if (!_loading) ...[
+                    const SizedBox(height: AppSpacing.x2),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder: (c, a, s) => const ProgressScreen(),
+                              transitionsBuilder: (c, a, s, child) =>
+                                  FadeTransition(
+                                opacity: a,
+                                child: child,
+                              ),
+                            ),
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.accent,
+                          side: const BorderSide(color: AppColors.border),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: AppRadius.borderRadius,
+                          ),
+                        ),
+                        icon: const Icon(
+                          LucideIcons.trendingUp,
+                          size: 18,
+                        ),
+                        label: Text(
+                          'View progress & trends',
+                          style: AppTextStyles.label.copyWith(
+                            color: AppColors.accent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.x2),
                   if (_loading)
                     const LinearProgressIndicator(

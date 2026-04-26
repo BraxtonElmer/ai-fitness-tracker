@@ -4,6 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'theme.dart';
 import 'screens/home_screen.dart';
 import 'screens/food_scan_screen.dart';
+import 'screens/food_log_screen.dart';
 import 'screens/health_dashboard_screen.dart';
 
 void main() {
@@ -37,6 +38,7 @@ class _AppShellState extends State<AppShell> {
   final List<Widget> _screens = const [
     HomeScreen(),
     FoodScanScreen(),
+    FoodLogScreen(),
     HealthDashboardScreen(),
   ];
 
@@ -58,11 +60,11 @@ class _AppShellState extends State<AppShell> {
           child: SizedBox(
             height: 56,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(LucideIcons.home, 0),
-                _buildNavItem(LucideIcons.scan, 1),
-                _buildNavItem(LucideIcons.activity, 2),
+                Expanded(child: _buildNavItem(LucideIcons.home, 0)),
+                Expanded(child: _buildNavItem(LucideIcons.scan, 1)),
+                Expanded(child: _buildNavItem(LucideIcons.history, 2)),
+                Expanded(child: _buildNavItem(LucideIcons.activity, 3)),
               ],
             ),
           ),
@@ -73,16 +75,18 @@ class _AppShellState extends State<AppShell> {
 
   Widget _buildNavItem(IconData icon, int index) {
     final isActive = _currentIndex == index;
-    return GestureDetector(
-      onTap: () => setState(() => _currentIndex = index),
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 56,
-        height: 56,
-        child: Icon(
-          icon,
-          size: 20,
-          color: isActive ? AppColors.accent : AppColors.mutedText,
+    return Center(
+      child: GestureDetector(
+        onTap: () => setState(() => _currentIndex = index),
+        behavior: HitTestBehavior.opaque,
+        child: SizedBox(
+          width: 56,
+          height: 56,
+          child: Icon(
+            icon,
+            size: 20,
+            color: isActive ? AppColors.accent : AppColors.mutedText,
+          ),
         ),
       ),
     );

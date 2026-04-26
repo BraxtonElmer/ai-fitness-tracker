@@ -6,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../theme.dart';
 import '../services/api_service.dart';
+import 'meal_log_editor_screen.dart';
 import 'result_screen.dart';
 
 class FoodScanScreen extends StatefulWidget {
@@ -57,10 +58,27 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
     setState(() => _loading = false);
 
     if (result['success'] == true) {
+      final data = result['data'] as Map<String, dynamic>;
+
+      if (!mounted) return;
       Navigator.of(context).push(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => ResultScreen(
-            nutritionData: result['data'] as Map<String, dynamic>,
+            nutritionData: data,
+            onAddToLog: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (c, a, s) => MealLogEditorScreen(
+                    initialNutrition: data,
+                    source: FoodEntrySource.scan,
+                    extraPopsAfterSave: 1,
+                  ),
+                  transitionsBuilder: (c, a, s, child) {
+                    return FadeTransition(opacity: a, child: child);
+                  },
+                ),
+              );
+            },
           ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);

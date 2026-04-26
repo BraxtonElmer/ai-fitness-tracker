@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../theme.dart';
 
 class ResultScreen extends StatelessWidget {
   final Map<String, dynamic> nutritionData;
+  final bool showBack;
+  final bool showAddToLog;
+  final VoidCallback? onAddToLog;
 
-  const ResultScreen({super.key, required this.nutritionData});
+  const ResultScreen({
+    super.key,
+    required this.nutritionData,
+    this.showBack = false,
+    this.showAddToLog = true,
+    this.onAddToLog,
+  });
 
   // RDA values (adult male)
   static const Map<String, double> _rda = {
@@ -57,9 +67,25 @@ class ResultScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
+            if (showBack)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  padding: const EdgeInsets.only(
+                    left: AppSpacing.x1,
+                    bottom: AppSpacing.x1,
+                  ),
+                  icon: const Icon(
+                    LucideIcons.chevronLeft,
+                    color: AppColors.accent,
+                    size: 24,
+                  ),
+                ),
+              ),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(AppSpacing.x2),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.x2),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -191,30 +217,56 @@ class ResultScreen extends StatelessWidget {
                 ),
               ),
             ),
-            // Scan Another button
             Padding(
               padding: const EdgeInsets.all(AppSpacing.x2),
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: OutlinedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.accent,
-                    side: const BorderSide(
-                        color: AppColors.accent, width: 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.borderRadius,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (showAddToLog && onAddToLog != null) ...[
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: onAddToLog,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.accent,
+                          foregroundColor: AppColors.background,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: AppRadius.borderRadius,
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'ADD TO LOG',
+                          style: AppTextStyles.buttonText,
+                        ),
+                      ),
                     ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    'SCAN ANOTHER',
-                    style: AppTextStyles.buttonText.copyWith(
-                      color: AppColors.accent,
+                    const SizedBox(height: AppSpacing.x2),
+                  ],
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.accent,
+                        side: const BorderSide(
+                            color: AppColors.accent, width: 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppRadius.borderRadius,
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        showBack ? 'CLOSE' : 'SCAN ANOTHER',
+                        style: AppTextStyles.buttonText.copyWith(
+                          color: AppColors.accent,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
